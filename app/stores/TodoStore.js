@@ -1,6 +1,10 @@
 import {createStore, combineReducers} from 'redux';
 import * as TodoActionTypes from '../constants/TodoActionTypes';
+import firebase from '../utils/Firebase.js';
 
+const todosRef = firebase.database().ref('todos');
+
+todosRef.on('value', snapshot => console.log(snapshot.val()));
 const todoReducer = function(state = [], action) {
   switch (action.type) {
     case TodoActionTypes.LOAD_TODOS:
