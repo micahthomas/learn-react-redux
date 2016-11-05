@@ -1,33 +1,48 @@
 import {createStore, combineReducers} from 'redux';
-import * as TodoActionTypes from '../constants/TodoActionTypes';
+
 import firebase from '../utils/Firebase.js';
 
-const todosRef = firebase.database().ref('todos');
+import {
+  LOAD_TODOS_SUCCESS,
+  UPDATE_TODOS_SUCCESS,
+  CREATE_TODOS_SUCCESS,
+  DELETE_TODOS_SUCCESS,
+  FILTER_TODOS
+} from '../constants/TodoActionTypes';
 
-todosRef.on('value', snapshot => console.log(snapshot.val()));
-const todoReducer = function(state = [], action) {
-  switch (action.type) {
-    case TodoActionTypes.LOAD_TODOS:
-      state = [
-        ...state,
-        ...action.todos
-      ];
-      break;
+export const TodosState = {
+  filter: {},
+  ref: null,
+  list: null,
+  userId: null,
+  previous: null,
+  deleted: null
+};
+
+function cleanUpOldRef(state) {
+  // Check for existing refs and listeners
+  if (state.ref) {
+    // Turn off all listeners
+    state.ref.off()
   }
-  return state;
 }
 
-const reducers = combineReducers({todos: todoReducer});
-
-export const TodoStore = createStore(reducers);
-
-TodoStore.subscribe(() => {
-  console.log("store changed", TodoStore.getState());
-});
-
-TodoStore.dispatch({type: TodoActionTypes.LOAD_TODOS, todos: [
-  {
-    id: Date.now(),
-    text: 'hello world!'
+export function TodoReducer(state = new TodosState(), {type, payload}) {
+  switch(type) {
+    case LOAD_TODOS_SUCCESS:
+      cleanUpOldRef(state);
+      return {
+        ...state,
+        ...payload
+      }
+    case CREATE_TODOS_SUCCESS:
+      let newState = {...state};
+      newState.list[payload.key] = payload;
+      return newState;
+    case UPDATE_TODOS_SUCCESS:
+      let newState = {...state};
+      newState.list[payload.key] = payload;
+    default:
+      return state;
   }
-]})
+}
