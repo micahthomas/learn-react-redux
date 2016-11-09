@@ -1,49 +1,49 @@
 import React from "react";
+import {connect} from 'react-redux';
 
 import Todo from "../components/Todo";
 import * as _ from 'lodash';
 import * as TodoActions from "../actions/TodoActions";
 
-export default class TodoPage extends React.Component {
-  static contextTypes = {
-    store: React.PropTypes.object
-  }
+const TodoListComponent = ({todos, ref, onAddTodo, onTodoEdit, onTodoDelete}) => (
+  <div>
+    <button onClick={() => onAddTodo()}>Add Todo</button>
+    <input/>
+    <h1>Todos</h1>
+    <ul>{_.map(todos, (todo, id) => <Todo key={id} id={id} {...todo} onEdit={onTodoEdit} onDelete={onTodoDelete}/>)}</ul>
+  </div>
+)
 
-  constructor(props, context) {
-    super(props, context);
-    this.render = this.render.bind(this);
-    this.addTodo = this.addTodo.bind(this);
-  }
+TodoListComponent.propTypes = {
+  todos: React.PropTypes.object.isRequired,
+  onAddTodo: React.PropTypes.func.isRequired,
+  onTodoEdit: React.PropTypes.func.isRequired,
+  onTodoDelete: React.PropTypes.func.isRequired
+}
 
-  componentWillMount() {
-    let {userId} = this.props;
-    let {store} = this.context;
-    TodoActions.setUser(store, userId);
-    this.unsubscribe = store.subscribe(this.render);
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  addTodo() {
-    let {store} = this.context;
-    TodoActions.createTodo(store, {completed: false, text: 'Hello World!'});
-  }
-
-  render() {
-    console.log("Render Called!");
-    const {store} = this.context;
-    const {todos} = store.getState().todos;
-    const TodoComponents = _.map(todos, (todo, id) => <Todo key={id} id={id} {...todo} store={store} />);
-    console.log('render called', TodoComponents)
-    return (
-      <div>
-        <button onClick={this.addTodo}>Add Todo</button>
-        <input/>
-        <h1>Todos</h1>
-        <ul>{TodoComponents}</ul>
-      </div>
-    )
+const mapStateToProps = ({todos, ref}) => {
+  return {
+    todos: todos.list,
+    onAddTodo: () => {
+      TodoActions.createTodo(todos.ref)
+    },
+    onTodoEdit: (id, todo) => {
+      TodoActions.updateTodo(todos.ref, id, todo);
+    },
+    onTodoDelete: (id) => {
+      TodoActions.deleteTodo(todos.ref, id)
+    }
   }
 }
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  TodoActions.setUser(dispatch, ownProps.userId);
+  return {dispatch};
+}
+
+const TodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoListComponent);
+
+export default TodoList;

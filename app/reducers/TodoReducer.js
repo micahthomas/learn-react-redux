@@ -15,7 +15,7 @@ import {
 export const InitialState = {
   filter: {},
   ref: null,
-  todos: {},
+  list: {},
   userId: null,
   previous: null,
   deleted: null
@@ -53,27 +53,27 @@ export default function TodoReducer(state = InitialState, {type, payload}) {
       return newState;
 
     case TODOS_LOADED_SUCCESS:
-      newState.todos = payload.val();
+      newState.list = payload.val();
       return newState;
 
     case TODO_CREATED_SUCCESS:
     case TODO_UPDATED_SUCCESS:
-      newState.previous = state.todos;
-      newState.todos[payload.key] = payload.val();
+      newState.previous = state.list;
+      newState.list[payload.key] = payload.val();
       return newState;
 
     case TODO_MOVED_SUCCESS:
       // TODO: make sure to pass old_key to the TODO_MOVED_SUCCESS action, the function will be passed two args
       // snapshot and the old_key
-      newState.previous = state.todos;
-      newState.todos = _.omit(state.todos, payload.old_key);
-      newState.todos[payload.key] = state.todos[payload.old_key];
+      newState.previous = state.list;
+      newState.list = _.omit(state.list, payload.old_key);
+      newState.list[payload.key] = state.list[payload.old_key];
       return newState;
 
     case TODO_DELETED_SUCCESS:
-      newState.todos = _.omit(state.todos, payload.key);
-      newState.previous = state.todos;
-      newState.deleted = state.todos[payload.key];
+      newState.list = _.omit(state.list, payload.key);
+      newState.previous = state.list;
+      newState.deleted = state.list[payload.key];
       return newState;
 
     default:
