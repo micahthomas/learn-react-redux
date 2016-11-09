@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import * as TodoActions from '../actions/TodoActions.js'
 
 export default class Todo extends React.Component {
@@ -12,7 +12,7 @@ export default class Todo extends React.Component {
   static defaultProps = {
     complete: false,
     edit: false,
-    text: "Empty Todo"
+    text: 'Empty Todo'
   }
 
   static contextTypes = {
@@ -27,15 +27,15 @@ export default class Todo extends React.Component {
     const {complete, edit, text, id, onEdit, onDelete} = this.props;
 
     const icon = complete
-      ? "\u2714"
-      : "\u2716"
+      ? '\u2714'
+      : '\u2716'
 
     const todoComponent = edit ?
       <input
         value={text}
         onChange={(event) => onEdit(id, {text: event.target.value})}
         onBlur={() => onEdit(id, {edit: false})}
-        focus="focused"/> :
+        focus='focused'/> :
       <span onClick={() => onEdit(id, {edit: true})}>{text}</span>;
 
       return (
