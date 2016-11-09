@@ -1,46 +1,45 @@
 import React from "react";
 
 import Todo from "../components/Todo";
+import * as _ from 'lodash';
 import * as TodoActions from "../actions/TodoActions";
-import {TodoStore} from "../stores/TodoStore";
 
 export default class TodoPage extends React.Component {
-  constructor() {
-    super();
-    this.state = TodoStore.getState();
-    this.loadTodos = this.loadTodos.bind(this);
+  static contextTypes = {
+    store: React.PropTypes.object
+  }
+
+  constructor(props, context) {
+    super(props, context);
+    this.render = this.render.bind(this);
+    this.addTodo = this.addTodo.bind(this);
   }
 
   componentWillMount() {
-    this.unsubscribe = TodoStore.subscribe(this.loadTodos);
+    let {userId} = this.props;
+    let {store} = this.context;
+    TodoActions.setUser(store, userId);
+    this.unsubscribe = store.subscribe(this.render);
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  loadTodos() {
-    this.setState(TodoStore.getState());
-  }
-
-  // createTodo() {
-  //     TodoActions.createTodo(Date.now());
-  // }
-
-  reloadTodos() {
-    TodoActions.reloadTodos();
+  addTodo() {
+    let {store} = this.context;
+    TodoActions.createTodo(store, {completed: false, text: 'Hello World!'});
   }
 
   render() {
-    const {todos} = this.state;
-
-    const TodoComponents = todos.map((todo) => {
-      return <Todo key={todo.id} {...todo}/>;
-    });
-
+    console.log("Render Called!");
+    const {store} = this.context;
+    const {todos} = store.getState().todos;
+    const TodoComponents = _.map(todos, (todo, id) => <Todo key={id} id={id} {...todo} store={store} />);
+    console.log('render called', TodoComponents)
     return (
       <div>
-        <button onClick={this.reloadTodos.bind(this)}>Reload!</button>
+        <button onClick={this.addTodo}>Add Todo</button>
         <input/>
         <h1>Todos</h1>
         <ul>{TodoComponents}</ul>

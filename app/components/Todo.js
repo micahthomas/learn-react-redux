@@ -1,4 +1,5 @@
 import React from "react";
+import * as TodoActions from '../actions/TodoActions.js'
 
 export default class Todo extends React.Component {
   static propTypes = {
@@ -10,15 +11,20 @@ export default class Todo extends React.Component {
   static defaultProps = {
     complete: false,
     edit: false,
-    text: "No Text"
+    text: "Empty Todo"
   }
 
-  constructor(props) {
-    super(props);
+  static contextTypes = {
+    store: React.PropTypes.object
+  }
+
+  constructor(props, context) {
+    super(props, context);
   }
 
   render() {
-    const {complete, edit, text} = this.props;
+    const {complete, edit, text, id} = this.props;
+    const {store} = this.context;
 
     const icon = complete
       ? "\u2714"
@@ -27,7 +33,7 @@ export default class Todo extends React.Component {
     if (edit) {
       return (
         <li>
-          <input value={text} focus="focused"/>
+          <input value={text} onChange={TodoActions.updateTodo(store, id, {complete, edit, text})} focus="focused"/>
         </li>
       );
     }
@@ -35,7 +41,7 @@ export default class Todo extends React.Component {
     return (
       <li>
         <span>{text}</span>
-        <span>{icon}</span>
+        <button>{icon}</button>
       </li>
     );
   }

@@ -1,5 +1,13 @@
+// Firebase event handler types
 export const TODOS_LOADED_SUCCESS = 'TODOS_LOADED_SUCCESS';
 export const TODO_CREATED_SUCCESS = 'TODO_CREATED_SUCCESS';
 export const TODO_UPDATED_SUCCESS = 'TODO_UPDATED_SUCCESS';
 export const TODO_MOVED_SUCCESS = 'TODO_MOVED_SUCCESS';
 export const TODO_DELETED_SUCCESS = 'TODO_DELETED_SUCCESS';
+
+
+export const CREATE_TODO = 'CREATE_TODO';
+export const UPDATE_TODO = 'UPDATE_TODO';
+export const DELETE_TODO = 'DELETE_TODO';
+
+export const SET_USER = 'SET_USER';
