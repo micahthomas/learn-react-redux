@@ -1,16 +1,12 @@
 import { TODO_CREATED_SUCCESS, TODO_UPDATED_SUCCESS, TODO_MOVED_SUCCESS, TODO_DELETED_SUCCESS, SET_USER} from '../constants/TodoActionTypes'
 import firebase from '../utils/Firebase'
 
-export function createTodo (ref, todo) {
-  if (todo) {
-    ref.push(todo)
-  } else {
-    ref.push({
-      edit: false,
-      complete: false,
-      text: 'Hello World2!'
-    })
-  }
+export function createTodo (ref, text) {
+  ref.push({
+    edit: false,
+    complete: false,
+    text: text ? text : 'No Todo!'
+  })
 }
 
 export function deleteTodo (ref, id) {
@@ -47,6 +43,6 @@ export function setUser (dispatch, userId) {
     type: SET_USER,
     payload: {
       ref,
-    userId}
+      userId}
   })
 }

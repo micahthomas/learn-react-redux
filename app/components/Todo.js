@@ -1,7 +1,7 @@
 import React from 'react';
 import * as TodoActions from '../actions/TodoActions.js'
 
-export default class Todo extends React.Component {
+export class Todo extends React.Component {
   static propTypes = {
     id: React.PropTypes.string.isRequired,
     complete: React.PropTypes.bool.isRequired,
@@ -24,11 +24,18 @@ export default class Todo extends React.Component {
   }
 
   render() {
-    const {complete, edit, text, id, onEdit, onDelete} = this.props;
+    const {
+      complete,
+      edit,
+      text,
+      id,
+      onEdit,
+      onDelete
+    } = this.props;
 
-    const icon = complete
-      ? '\u2714'
-      : '\u2716'
+    const icon = complete ?
+      '\u2714' :
+      '\u2716'
 
     const todoComponent = edit ?
       <input
@@ -38,11 +45,48 @@ export default class Todo extends React.Component {
         focus='focused'/> :
       <span onClick={() => onEdit(id, {edit: true})}>{text}</span>;
 
-      return (
-        <li>
-          {todoComponent}
-          <button onClick={() => onDelete(id)}>{icon}</button>
-        </li>
-      );
+    return (
+      <li>
+        {todoComponent}
+        <button onClick={() => onDelete(id)}>{icon}</button>
+      </li>
+    );
+  }
+}
+
+export class AddTodo extends React.Component {
+  static propTypes = {
+    createTodo: React.PropTypes.func.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this.input = null;
+  }
+
+  render() {
+    const {
+      createTodo
+    } = this.props;
+    return (
+
+      <div>
+      <form onSubmit={e => {
+        e.preventDefault()
+        if (!this.input.value.trim()) {
+          return
+        }
+        createTodo(this.input.value)
+        this.input.value = ''
+      }}>
+        <input ref={node => {
+          this.input = node
+        }} />
+        <button type="submit">
+          Add Todo
+        </button>
+      </form>
+    </div>
+    )
   }
 }

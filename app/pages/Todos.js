@@ -1,16 +1,23 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import {
+  connect
+} from 'react-redux'
 import * as _ from 'lodash'
 
-import Todo from '../components/Todo'
+import {
+  Todo,
+  AddTodo
+} from '../components/Todo'
 import * as TodoActions from '../actions/TodoActions'
 
-const TodoListComponent = ({todos, ref, onAddTodo, onTodoEdit, onTodoDelete}) => (
+const TodoListComponent = ({
+  todos,
+  createTodo,
+  updateTodo,
+  deleteTodo
+}) => (
   <div>
-    <button onClick={;() => onAddTodo()}>
-      Add Todo
-    </button>
-    <input/>
+    <AddTodo createTodo={createTodo}/>
     <h1>Todos</h1>
     <ul>
       {_.map(todos, (todo, id) => (
@@ -18,8 +25,8 @@ const TodoListComponent = ({todos, ref, onAddTodo, onTodoEdit, onTodoDelete}) =>
            key={id}
            id={id}
            {...todo}
-           onEdit={onTodoEdit}
-           onDelete={onTodoDelete} />
+           onEdit={updateTodo}
+           onDelete={deleteTodo} />
        ))}
     </ul>
   </div>
@@ -27,21 +34,23 @@ const TodoListComponent = ({todos, ref, onAddTodo, onTodoEdit, onTodoDelete}) =>
 
 TodoListComponent.propTypes = {
   todos: React.PropTypes.object.isRequired,
-  onAddTodo: React.PropTypes.func.isRequired,
-  onTodoEdit: React.PropTypes.func.isRequired,
-  onTodoDelete: React.PropTypes.func.isRequired
+  createTodo: React.PropTypes.func.isRequired,
+  updateTodo: React.PropTypes.func.isRequired,
+  deleteTodo: React.PropTypes.func.isRequired
 }
 
-const mapStateToProps = ({todos, ref}) => {
+const mapStateToProps = ({
+  todos
+}) => {
   return {
     todos: todos.list,
-    onAddTodo: () => {
-      TodoActions.createTodo(todos.ref)
+    createTodo: (text) => {
+      TodoActions.createTodo(todos.ref, text)
     },
-    onTodoEdit: (id, todo) => {
+    updateTodo: (id, todo) => {
       TodoActions.updateTodo(todos.ref, id, todo)
     },
-    onTodoDelete: (id) => {
+    deleteTodo: (id) => {
       TodoActions.deleteTodo(todos.ref, id)
     }
   }
@@ -49,7 +58,9 @@ const mapStateToProps = ({todos, ref}) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   TodoActions.setUser(dispatch, ownProps.userId)
-  return {dispatch}
+  return {
+    dispatch
+  }
 }
 
 const TodoList = connect(
