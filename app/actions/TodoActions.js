@@ -18,8 +18,10 @@ export function updateTodo (ref, id, todo) {
 }
 
 export function setUser (dispatch, userId) {
-  console.log('Set User', userId)
-  let ref = firebase.database().ref('todos/' + userId)
+  // Create firebase ref for the user's todo list
+  let ref = firebase.database().ref('todos').child(userId)
+
+  // Setup event handlers on ref
   ref.on('child_added', snapshot => dispatch({
     type: TODO_CREATED_SUCCESS,
     payload: snapshot
@@ -39,10 +41,12 @@ export function setUser (dispatch, userId) {
       payload: snapshot
     })
   })
+
+  // Dispatch event to save the ref to store
   dispatch({
     type: SET_USER,
     payload: {
       ref,
-      userId}
+    userId}
   })
 }

@@ -34,7 +34,9 @@ export default function TodoReducer (state = InitialState , {type, payload}) {
       return state
   }
 
-  let newState = {...state}
+  let newState = {
+    ...state
+  }
   switch (type) {
     case SET_USER:
       cleanUpOldRef(state)

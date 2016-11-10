@@ -1,23 +1,13 @@
 import React from 'react'
-import {
-  connect
-} from 'react-redux'
+import { connect} from 'react-redux'
 import * as _ from 'lodash'
 
-import {
-  Todo,
-  AddTodo
-} from '../components/Todo'
+import { Todo, AddTodo} from '../components/Todo'
 import * as TodoActions from '../actions/TodoActions'
 
-const TodoListComponent = ({
-  todos,
-  createTodo,
-  updateTodo,
-  deleteTodo
-}) => (
+const TodoListComponent = ({todos, createTodo, updateTodo, deleteTodo}) => (
   <div>
-    <AddTodo createTodo={createTodo}/>
+    <AddTodo createTodo={createTodo} />
     <h1>Todos</h1>
     <ul>
       {_.map(todos, (todo, id) => (
@@ -39,9 +29,7 @@ TodoListComponent.propTypes = {
   deleteTodo: React.PropTypes.func.isRequired
 }
 
-const mapStateToProps = ({
-  todos
-}) => {
+const mapStateToProps = ({todos}) => {
   return {
     todos: todos.list,
     createTodo: (text) => {
@@ -59,8 +47,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch, ownProps) => {
   TodoActions.setUser(dispatch, ownProps.userId)
   return {
-    dispatch
-  }
+  dispatch}
 }
 
 const TodoList = connect(

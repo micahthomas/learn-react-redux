@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import * as TodoActions from '../actions/TodoActions.js'
 
 export class Todo extends React.Component {
@@ -15,12 +15,8 @@ export class Todo extends React.Component {
     text: 'Empty Todo'
   }
 
-  static contextTypes = {
-    store: React.PropTypes.object
-  }
-
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props)
   }
 
   render() {
@@ -31,7 +27,7 @@ export class Todo extends React.Component {
       id,
       onEdit,
       onDelete
-    } = this.props;
+    } = this.props
 
     const icon = complete ?
       '\u2714' :
@@ -43,14 +39,14 @@ export class Todo extends React.Component {
         onChange={(event) => onEdit(id, {text: event.target.value})}
         onBlur={() => onEdit(id, {edit: false})}
         focus='focused'/> :
-      <span onClick={() => onEdit(id, {edit: true})}>{text}</span>;
+      <span onClick={() => onEdit(id, {edit: true})}>{text}</span>
 
     return (
       <li>
         {todoComponent}
         <button onClick={() => onDelete(id)}>{icon}</button>
       </li>
-    );
+    )
   }
 }
 
@@ -60,14 +56,14 @@ export class AddTodo extends React.Component {
   }
 
   constructor(props) {
-    super(props);
-    this.input = null;
+    super(props)
+    this.input = null
   }
 
   render() {
     const {
       createTodo
-    } = this.props;
+    } = this.props
     return (
 
       <div>
